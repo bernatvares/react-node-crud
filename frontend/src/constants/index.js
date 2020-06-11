@@ -2,11 +2,10 @@ import {
   NumericInput,
   InputGroup,
   TextArea,
-  TextField
+  TextField,
 } from "formik-blueprint";
 import * as Yup from "yup";
 import moment from "moment";
-import DatePicker from "components/datepicker";
 import RadioInput from "components/radioinput";
 
 export const DATE_FORMAT = "YYYY/MM/DD";
@@ -21,7 +20,7 @@ export const RECORD_FIELDS = {
     name: "name",
     component: InputGroup,
     validate: Yup.string().required("Required"),
-    large: true
+    large: true,
   },
   difference: {
     label: "Time difference to GMT. (Hours)",
@@ -35,7 +34,7 @@ export const RECORD_FIELDS = {
       .min(-24, "Difference must be over -24!")
       .max(24, "Difference must be less than 24!")
       .required("Required"),
-    initialValue: 0
+    initialValue: 0,
   },
   city: {
     label: "City",
@@ -47,8 +46,8 @@ export const RECORD_FIELDS = {
     component: InputGroup,
     validate: Yup.string().required("Required"),
     initialValue: "",
-    large: true
-  }
+    large: true,
+  },
 };
 
 export const USER_FIELDS = {
@@ -62,7 +61,7 @@ export const USER_FIELDS = {
     component: InputGroup,
     validate: Yup.string().required("Required"),
     initialValue: "",
-    large: true
+    large: true,
   },
   lastName: {
     label: "Last Name",
@@ -74,7 +73,7 @@ export const USER_FIELDS = {
     component: InputGroup,
     validate: Yup.string().required("Required"),
     initialValue: "",
-    large: true
+    large: true,
   },
   email: {
     label: "Email Address",
@@ -88,7 +87,7 @@ export const USER_FIELDS = {
       .email("Invalid email")
       .required("Required"),
     initialValue: "",
-    large: true
+    large: true,
   },
   password: {
     label: "Password",
@@ -103,7 +102,7 @@ export const USER_FIELDS = {
       .max(50, "Length must be less than 50 letters!")
       .required("Required"),
     initialValue: "",
-    large: true
+    large: true,
   },
   passwordConfirm: {
     label: "Confirm Password",
@@ -115,17 +114,17 @@ export const USER_FIELDS = {
     component: InputGroup,
     validate: Yup.string()
       .when("password", {
-        is: val => (val && val.length > 0 ? true : false),
+        is: (val) => (val && val.length > 0 ? true : false),
         then: Yup.string().oneOf(
           [Yup.ref("password")],
           "Both password need to be the same"
-        )
+        ),
       })
       .min(8, "Length must be at least 8 letters!")
       .max(50, "Length must be less than 50 letters!")
       .required("Required"),
     initialValue: "",
-    large: true
+    large: true,
   },
   role: {
     label: "Role",
@@ -137,12 +136,12 @@ export const USER_FIELDS = {
     component: RadioInput,
     validate: null,
     initialValue: 0,
-    inline: true
-  }
+    inline: true,
+  },
 };
 
 export const ROLES = {
   USER: 0,
   MANAGER: 1,
-  ADMIN: 2
+  ADMIN: 2,
 };

@@ -39,6 +39,7 @@ const Routes = () => {
         )}
         {isAuthenticated && (
           <Switch>
+            <Route exact path="/dashboard" component={Dashboard} />
             {isManagable && <Route exact path="/users" component={Users} />}
             <Route render={() => <Redirect to="/" />} />
           </Switch>
