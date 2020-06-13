@@ -73,7 +73,10 @@ export default handleActions(
 
     [Success(DELETE_PROFILE)]: (state, { payload }) => ({
       ...state,
+      token: null,
       status: "SUCCESS",
+      me: null,
+      error: null,
     }),
 
     [Fail(DELETE_PROFILE)]: (state, { payload }) => ({

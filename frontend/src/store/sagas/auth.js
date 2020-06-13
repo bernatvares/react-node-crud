@@ -39,7 +39,7 @@ const deleteProfile = apiCall({
   method: "delete",
   path: () => "/auth/profile/",
   success: ({ data }) => {
-    // localStorage.setItem("auth_token", JSON.stringify(data));
+    localStorage.removeItem("auth_token");
   },
 });
 

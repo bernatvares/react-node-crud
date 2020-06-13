@@ -5,6 +5,7 @@ const {
   CREATE_USER_VALIDATION,
   UPDATE_USER_VALIDATION,
 } = require("../users/user.model");
+const { Record } = require("../records/record.model");
 const ROLES = require("../../constants");
 
 const login = async (req, res, next) => {
@@ -102,8 +103,20 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
+const deleteProfile = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ _id: req.user._id });
+    await Record.remove({ user: user._id });
+    await user.remove();
+    res.json({ id: user._id });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   login,
   signUp,
   updateProfile,
+  deleteProfile,
 };
