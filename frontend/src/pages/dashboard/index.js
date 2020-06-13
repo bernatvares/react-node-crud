@@ -13,14 +13,14 @@ import {
   Classes,
   Intent,
   Button,
-  Tooltip
+  Tooltip,
 } from "@blueprintjs/core";
 import {
   Table,
   Column,
   Cell,
   RenderMode,
-  SelectionModes
+  SelectionModes,
 } from "@blueprintjs/table";
 import { DateRangeInput } from "@blueprintjs/datetime";
 import moment from "moment";
@@ -33,7 +33,7 @@ import { setParams, getRecords, generateRecords } from "store/actions/record";
 import withToast from "hoc/withToast";
 import { DATE_FORMAT, ROLES } from "constants/index";
 
-const Dashboard = props => {
+const Dashboard = (props) => {
   const {
     setParams,
     params,
@@ -45,7 +45,7 @@ const Dashboard = props => {
     getUsers,
     users,
     userCount,
-    media
+    media,
   } = props;
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -56,17 +56,17 @@ const Dashboard = props => {
       width: media !== "mobile" ? "90%" : "95%",
       maxWidth: "100rem",
       margin: "auto",
-      marginTop: "3rem"
+      marginTop: "3rem",
     },
     cardChild: {
-      justifyContent: "space-between"
+      justifyContent: "space-between",
     },
     cell: {
-      padding: "0.3rem"
-    }
+      padding: "0.3rem",
+    },
   };
 
-  const onPageChange = page => {
+  const onPageChange = (page) => {
     setParams({ page });
   };
 
@@ -85,29 +85,29 @@ const Dashboard = props => {
       getUsers({
         params: {
           limit: userCount,
-          page: 1
-        }
+          page: 1,
+        },
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users, userCount]);
 
-  const onFilterByNameChange = e => {
+  const onFilterByNameChange = (e) => {
     setFilterByName(e.target.value);
     setParams({
       page: 1,
-      name: e.target.value
+      name: e.target.value,
     });
   };
 
-  const handleClick = item => {
+  const handleClick = (item) => {
     const enhancedUsers = _.map(selectedUsers, "_id").includes(item["_id"])
-      ? _.filter(selectedUsers, user => user["_id"] !== item["_id"])
+      ? _.filter(selectedUsers, (user) => user["_id"] !== item["_id"])
       : [...selectedUsers, item];
     setSelectedUsers(enhancedUsers);
     setParams({
       page: 1,
-      user: _.map(enhancedUsers, "_id")
+      user: _.map(enhancedUsers, "_id"),
     });
   };
 
@@ -117,7 +117,7 @@ const Dashboard = props => {
     setSelectedUsers(clonedUsers);
     setParams({
       page: 1,
-      user: _.map(clonedUsers, "_id")
+      user: _.map(clonedUsers, "_id"),
     });
   };
 
@@ -125,7 +125,7 @@ const Dashboard = props => {
     setSelectedUsers([]);
     setParams({
       page: 1,
-      user: []
+      user: [],
     });
   };
 
@@ -166,8 +166,8 @@ const Dashboard = props => {
               defaultRowHeight={38}
               columnWidths={
                 me.role < ROLES.ADMIN
-                  ? [50, 0, 200, 150, 100, 210]
-                  : [50, 200, 200, 150, 100, 210]
+                  ? [50, 0, 200, 150, 100, 200]
+                  : [50, 200, 200, 150, 100, 200]
               }
               renderMode={RenderMode.NONE}
               truncated={false}
@@ -179,7 +179,7 @@ const Dashboard = props => {
                 className={Classes.LARGE}
                 name="No"
                 allowSelection={false}
-                cellRenderer={row => (
+                cellRenderer={(row) => (
                   <Cell allowSelection={false}>
                     {row + (params.page - 1) * params.limit + 1}
                   </Cell>
@@ -188,7 +188,7 @@ const Dashboard = props => {
               <Column
                 className={Classes.LARGE}
                 name="User"
-                cellRenderer={row => {
+                cellRenderer={(row) => {
                   if (me.role < ROLES.ADMIN) return <span></span>;
                   return (
                     <Cell>
@@ -202,17 +202,17 @@ const Dashboard = props => {
               <Column
                 className={classNames(Classes.LARGE, "pt-1", "pl-2")}
                 name="Name"
-                cellRenderer={row => <Cell>{records[row].name}</Cell>}
+                cellRenderer={(row) => <Cell>{records[row].name}</Cell>}
               />
               <Column
                 className={Classes.LARGE}
                 name="City"
-                cellRenderer={row => <Cell>{records[row].city}</Cell>}
+                cellRenderer={(row) => <Cell>{records[row].city}</Cell>}
               />
               <Column
                 className={Classes.LARGE}
                 name="Timezone"
-                cellRenderer={row => {
+                cellRenderer={(row) => {
                   const symbol = records[row].difference >= 0 ? "+" : "";
                   return (
                     <Cell>{"GMT" + symbol + records[row].difference}</Cell>
@@ -222,7 +222,7 @@ const Dashboard = props => {
 
               <Column
                 name="Actions"
-                cellRenderer={row => (
+                cellRenderer={(row) => (
                   <Cell style={style.cell}>
                     <ButtonGroup>
                       <EditRow selectedRow={records[row]} users={users} />
@@ -257,10 +257,10 @@ Dashboard.propTypes = {
   records: PropTypes.array.isRequired,
   count: PropTypes.number.isRequired,
   params: PropTypes.object.isRequired,
-  generateRecords: PropTypes.func
+  generateRecords: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   records: state.record.records,
   currentRecord: state.record.currentRecord,
   params: state.record.params,
@@ -269,14 +269,14 @@ const mapStateToProps = state => ({
   userParams: state.user.params,
   users: state.user.users,
   userCount: state.user.count,
-  media: state.general.media
+  media: state.general.media,
 });
 
 const mapDispatchToProps = {
   setParams: setParams,
   getRecords: getRecords,
   getUsers: getUsers,
-  generateRecords: generateRecords
+  generateRecords: generateRecords,
 };
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(

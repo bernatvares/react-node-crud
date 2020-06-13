@@ -7,7 +7,7 @@ import {
   ButtonGroup,
   Card,
   Elevation,
-  Breadcrumb
+  Breadcrumb,
 } from "@blueprintjs/core";
 import {
   Table,
@@ -15,7 +15,7 @@ import {
   Cell,
   RenderMode,
   ColumnLoadingOption,
-  SelectionModes
+  SelectionModes,
 } from "@blueprintjs/table";
 import { upperFirst, toLower } from "lodash-es";
 import Header from "components/header";
@@ -25,16 +25,25 @@ import withToast from "hoc/withToast";
 import Pagination from "components/pagination";
 import { AddRow, EditRow, DeleteRow } from "components/user";
 
-const Users = props => {
-  const { users, getUsers, params, setParams, count, media, loading } = props;
+const Users = (props) => {
+  const {
+    users,
+    me,
+    getUsers,
+    params,
+    setParams,
+    count,
+    media,
+    loading,
+  } = props;
 
   const style = {
     card: {
       width: media !== "mobile" ? "70%" : "95%",
       maxWidth: "100rem",
       margin: "auto",
-      marginTop: "3rem"
-    }
+      marginTop: "3rem",
+    },
   };
 
   useEffect(() => {
@@ -51,7 +60,7 @@ const Users = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
-  const onPageChange = page => {
+  const onPageChange = (page) => {
     setParams({ page });
   };
 
@@ -69,7 +78,11 @@ const Users = props => {
               className="my-3"
               numRows={users.length}
               defaultRowHeight={38}
-              columnWidths={[50, 208, 200, 80, 200]}
+              columnWidths={
+                me.role < ROLES.ADMIN
+                  ? [50, 200, 200, 0, 200]
+                  : [50, 200, 200, 150, 200]
+              }
               renderMode={RenderMode.NONE}
               enableRowHeader={false}
               selectionModes={SelectionModes.NONE}
@@ -77,7 +90,7 @@ const Users = props => {
               <Column
                 className={Classes.LARGE}
                 name="No"
-                cellRenderer={row => (
+                cellRenderer={(row) => (
                   <Cell>{row + (params.page - 1) * params.limit + 1}</Cell>
                 )}
                 loadingOptions={loading ? ColumnLoadingOption.CELLS : null}
@@ -85,7 +98,7 @@ const Users = props => {
               <Column
                 className={classNames(Classes.LARGE, "pt-1", "pl-2")}
                 name="Name"
-                cellRenderer={row => (
+                cellRenderer={(row) => (
                   <Cell>
                     {users[row]
                       ? users[row].firstName + " " + users[row].lastName
@@ -97,7 +110,7 @@ const Users = props => {
               <Column
                 className={Classes.LARGE}
                 name="Email"
-                cellRenderer={row => (
+                cellRenderer={(row) => (
                   <Cell>{users[row] ? users[row].email : ""}</Cell>
                 )}
                 loadingOptions={loading ? ColumnLoadingOption.CELLS : null}
@@ -105,19 +118,24 @@ const Users = props => {
               <Column
                 className={Classes.LARGE}
                 name="Role"
-                cellRenderer={row => (
-                  <Cell>
-                    {users[row]
-                      ? upperFirst(toLower(Object.keys(ROLES)[users[row].role]))
-                      : ""}
-                  </Cell>
-                )}
+                cellRenderer={(row) => {
+                  if (me.role < ROLES.ADMIN) return <span></span>;
+                  return (
+                    <Cell>
+                      {users[row]
+                        ? upperFirst(
+                            toLower(Object.keys(ROLES)[users[row].role])
+                          )
+                        : ""}
+                    </Cell>
+                  );
+                }}
                 loadingOptions={loading ? ColumnLoadingOption.CELLS : null}
               />
 
               <Column
                 name="Actions"
-                cellRenderer={row => (
+                cellRenderer={(row) => (
                   <Cell>
                     {users[row] && (
                       <ButtonGroup>
@@ -144,18 +162,19 @@ const Users = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   users: state.user.users,
   params: state.user.params,
   count: state.user.count,
+  me: state.auth.me,
   user: state.user.user,
   media: state.general.media,
-  loading: state.user.loading
+  loading: state.user.loading,
 });
 
 const mapDispatchToProps = {
   getUsers: getUsers,
-  setParams: setParams
+  setParams: setParams,
 };
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(

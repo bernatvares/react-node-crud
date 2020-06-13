@@ -97,8 +97,8 @@ const ManageProfile = (props) => {
   _.toPairs(_.pick(USER_FIELDS, fieldList)).map(
     (a) => (initialValue[a[0]] = _.get(me, a[0], ""))
   );
-  initialValue["password"] = "********";
-  initialValue["passwordConfirm"] = "********";
+  // initialValue["password"] = "";
+  // initialValue["passwordConfirm"] = "";
 
   return (
     <>
