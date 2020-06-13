@@ -1,6 +1,12 @@
 import { handleActions } from "redux-actions";
 import { Success, Fail } from "utils/status";
-import { SIGNIN, SIGNOUT, SIGNUP, UPDATE_PROFILE } from "store/constants";
+import {
+  SIGNIN,
+  SIGNOUT,
+  SIGNUP,
+  UPDATE_PROFILE,
+  DELETE_PROFILE,
+} from "store/constants";
 
 const getInitialState = () => {
   let authInfo = JSON.parse(localStorage.getItem("auth_token") || "{}");
@@ -9,14 +15,14 @@ const getInitialState = () => {
     status: "",
     error: null,
     me: null,
-    token: null
+    token: null,
   };
 
   return authInfo
     ? {
         ...initialState,
         token: authInfo.token,
-        me: authInfo.info
+        me: authInfo.info,
       }
     : initialState;
 };
@@ -27,7 +33,7 @@ export default handleActions(
       ...state,
       token: payload.token,
       status: "SUCCESS",
-      me: payload.info
+      me: payload.info,
     }),
 
     [Fail(SIGNIN)]: (state, { payload }) => ({
@@ -35,13 +41,13 @@ export default handleActions(
       token: null,
       status: "FAIL",
       me: null,
-      error: payload
+      error: payload,
     }),
 
-    [Success(SIGNUP)]: state => ({
+    [Success(SIGNUP)]: (state) => ({
       ...state,
       status: "SUCCESS",
-      error: null
+      error: null,
     }),
 
     [Fail(SIGNUP)]: (state, { payload }) => ({
@@ -49,29 +55,40 @@ export default handleActions(
       token: null,
       status: "FAIL",
       me: null,
-      error: payload
+      error: payload,
     }),
 
     [Success(UPDATE_PROFILE)]: (state, { payload }) => ({
       ...state,
       token: payload.token,
       status: "SUCCESS",
-      me: payload.info
+      me: payload.info,
     }),
 
     [Fail(UPDATE_PROFILE)]: (state, { payload }) => ({
       ...state,
       status: "FAIL",
-      error: payload
+      error: payload,
     }),
 
-    [SIGNOUT]: state => ({
+    [Success(DELETE_PROFILE)]: (state, { payload }) => ({
+      ...state,
+      status: "SUCCESS",
+    }),
+
+    [Fail(DELETE_PROFILE)]: (state, { payload }) => ({
+      ...state,
+      status: "FAIL",
+      error: payload,
+    }),
+
+    [SIGNOUT]: (state) => ({
       ...state,
       token: null,
       status: SIGNOUT,
       me: null,
-      error: null
-    })
+      error: null,
+    }),
   },
   getInitialState()
 );

@@ -18,3 +18,4 @@ export const SET_USER_PARAMS = "SET_USER_PARAMS";
 export const HIDE_TOAST = "HIDE_TOAST";
 export const SHOW_TOAST = "SHOW_TOAST";
 export const SET_MEDIA_FLAG = "SET_MEDIA_FLAG";
+export const DELETE_PROFILE = "DELETE_PROFILE";

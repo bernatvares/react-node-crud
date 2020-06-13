@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import classnames from "classnames";
 import { Formik, Form, Field } from "formik";
 import _ from "lodash-es";
 import {
@@ -9,30 +10,59 @@ import {
   Intent,
   Classes,
   ProgressBar,
-  FormGroup
+  FormGroup,
 } from "@blueprintjs/core";
 import * as Yup from "yup";
-import { updateProfile } from "store/actions/auth";
+import { updateProfile, deleteProfile } from "store/actions/auth";
 import { showToast } from "store/actions/toast";
 import withToast from "hoc/withToast";
 import { USER_FIELDS, ROLES } from "constants/index";
+import { getClassNamespace } from "@blueprintjs/core/lib/esm/common/classes";
 
-const ManageProfile = props => {
-  const { updateProfile, isOpen, toggleDialog, me, showToast } = props;
+const ManageProfile = (props) => {
+  const {
+    updateProfile,
+    deleteProfile,
+    isOpen,
+    toggleDialog,
+    me,
+    showToast,
+  } = props;
 
   const fieldList = [
     "firstName",
     "lastName",
     "email",
     "password",
-    "passwordConfirm"
+    "passwordConfirm",
   ];
 
   const validation = {};
   _.toPairs(_.pick(USER_FIELDS, fieldList)).map(
-    a => (validation[a[0]] = _.get(a[1], "validate", null))
+    (a) => (validation[a[0]] = _.get(a[1], "validate", null))
   );
   const validateSchema = Yup.object().shape(validation);
+
+  const [isRemoveProfileOpen, toggleRemoveProfile] = useState(false);
+
+  const onDeleteProfile = () => {
+    deleteProfile({
+      success: () => {
+        showToast({
+          message: "Your account was removed permanently!",
+          intent: Intent.SUCCESS,
+        });
+        toggleRemoveProfile(false);
+      },
+      fail: (err) => {
+        showToast({
+          message: err.response.data.message,
+          status: Intent.DANGER,
+        });
+        toggleRemoveProfile(false);
+      },
+    });
+  };
 
   const handleSubmit = (values, actions) => {
     if (
@@ -48,24 +78,24 @@ const ManageProfile = props => {
         showToast({
           message: "Your profile has been updated!",
           intent: Intent.SUCCESS,
-          timeout: 3000
+          timeout: 3000,
         });
         toggleDialog(false);
       },
-      fail: err => {
+      fail: (err) => {
         actions.setSubmitting(false);
         showToast({
           message: err.response.data.message,
-          status: Intent.DANGER
+          status: Intent.DANGER,
         });
         toggleDialog(false);
-      }
+      },
     });
   };
 
   const initialValue = {};
   _.toPairs(_.pick(USER_FIELDS, fieldList)).map(
-    a => (initialValue[a[0]] = _.get(me, a[0], ""))
+    (a) => (initialValue[a[0]] = _.get(me, a[0], ""))
   );
   initialValue["password"] = "********";
   initialValue["passwordConfirm"] = "********";
@@ -128,6 +158,22 @@ const ManageProfile = props => {
                       onClick={submitForm}
                       text="Save"
                     />
+                    <br />
+                  </div>
+                  <div
+                    className={classnames(
+                      Classes.DIALOG_FOOTER_ACTIONS,
+                      "pt-3"
+                    )}
+                  >
+                    <Button
+                      icon="delete"
+                      intent={Intent.DANGER}
+                      onClick={() => {
+                        toggleRemoveProfile(true);
+                      }}
+                      text="Remove"
+                    />
                   </div>
                 </Form>
               );
@@ -135,18 +181,40 @@ const ManageProfile = props => {
           </Formik>
         </div>
       </Dialog>
+      <Dialog
+        icon="trash"
+        isOpen={isRemoveProfileOpen}
+        onClose={() => toggleRemoveProfile(false)}
+        title="Delete Record"
+      >
+        <div className={Classes.DIALOG_BODY}>
+          Would you like to delete your account permanently?
+        </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button text="Cancel" onClick={() => toggleRemoveProfile(false)} />
+            <Button
+              icon="trash"
+              intent={Intent.DANGER}
+              onClick={onDeleteProfile}
+              text="Remove"
+            />
+          </div>
+        </div>
+      </Dialog>
     </>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   params: state.user.params,
-  me: state.auth.me
+  me: state.auth.me,
 });
 
 const mapDispatchToProps = {
   updateProfile: updateProfile,
-  showToast: showToast
+  showToast: showToast,
+  deleteProfile: deleteProfile,
 };
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(
