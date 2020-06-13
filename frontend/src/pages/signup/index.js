@@ -13,7 +13,7 @@ import {
   Classes,
   ProgressBar,
   FormGroup,
-  Elevation
+  Elevation,
 } from "@blueprintjs/core";
 import * as Yup from "yup";
 import { signup } from "store/actions/auth";
@@ -21,7 +21,7 @@ import { showToast } from "store/actions/toast";
 import withToast from "hoc/withToast";
 import { USER_FIELDS } from "constants/index";
 
-const SignUp = props => {
+const SignUp = (props) => {
   const { signup, showToast, media } = props;
   const history = useHistory();
 
@@ -30,7 +30,7 @@ const SignUp = props => {
     lastName: "",
     email: "",
     password: "",
-    passwordConfirm: ""
+    passwordConfirm: "",
   };
 
   const fieldList = [
@@ -38,12 +38,12 @@ const SignUp = props => {
     "lastName",
     "email",
     "password",
-    "passwordConfirm"
+    "passwordConfirm",
   ];
 
   const validation = {};
   _.toPairs(_.pick(USER_FIELDS, fieldList)).map(
-    a => (validation[a[0]] = _.get(a[1], "validate", null))
+    (a) => (validation[a[0]] = _.get(a[1], "validate", null))
   );
   const validateSchema = Yup.object().shape(validation);
 
@@ -55,16 +55,17 @@ const SignUp = props => {
         showToast({
           message: "You are successfully signed up!",
           intent: Intent.SUCCESS,
-          timeout: 3000
+          timeout: 3000,
         });
+        history.push("/login");
       },
-      fail: err => {
+      fail: (err) => {
         actions.setSubmitting(false);
         showToast({
           message: err.response.data.message,
-          status: Intent.DANGER
+          status: Intent.DANGER,
         });
-      }
+      },
     });
   };
 
@@ -141,16 +142,16 @@ const SignUp = props => {
 
 SignUp.propTypes = {
   signup: PropTypes.func.isRequired,
-  showToast: PropTypes.func.isRequired
+  showToast: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
   signup: signup,
-  showToast: showToast
+  showToast: showToast,
 };
 
-const mapStateToProps = state => ({
-  media: state.general.media
+const mapStateToProps = (state) => ({
+  media: state.general.media,
 });
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(

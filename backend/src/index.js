@@ -6,8 +6,7 @@ const mongoose = require("mongoose");
 const rootRouter = require("./routes");
 
 const config = {
-  mongoURL:
-    "mongodb+srv://nicolas:R9ECZDFNNLpKpKub@cluster0-j19z3.mongodb.net/toptal-test?retryWrites=true&w=majority",
+  mongoURL: "mongodb://localhost:27017/timezone-management",
   port: 4000,
 };
 
