@@ -14,7 +14,13 @@ function read(req, res, next) {
 const list = async (req, res, next) => {
   try {
     const { page = 1, limit = 5 } = req.query;
-    const where = { _id: { $ne: req.user._id }, role: { $lte: req.user.role } };
+
+    let findRole = 0;
+    if (req.user.role == ROLES.ADMIN) {
+      findRole = 2;
+    }
+
+    const where = { _id: { $ne: req.user._id }, role: { $lte: findRole } };
 
     if (!isInteger(toNumber(page)) || !isInteger(toNumber(limit))) {
       return res

@@ -9,20 +9,25 @@ import {
   Intent,
   Classes,
   FormGroup,
-  ProgressBar
+  ProgressBar,
 } from "@blueprintjs/core";
+import { useSelector } from "react-redux";
+import get from "lodash-es/get";
 import { handleNumberChange } from "@blueprintjs/docs-theme";
 import _ from "lodash-es";
 import { createUser, getUsers } from "store/actions/user";
 import { showToast } from "store/actions/toast";
 import withToast from "hoc/withToast";
 import { USER_FIELDS } from "constants/index";
+import { ROLES } from "constants/index";
 
-const AddRow = props => {
+const AddRow = (props) => {
   const { createUser, showToast } = props;
   const [isOpen, toggleDialog] = useState(false);
   const [value, setValue] = useState(0);
-  const handleValueChange = handleNumberChange(value => setValue(value));
+  const handleValueChange = handleNumberChange((value) => setValue(value));
+  const role = useSelector((state) => get(state, "auth.me.role", 0));
+  const isAdmin = role === ROLES.ADMIN;
 
   useEffect(() => {
     setValue(0);
@@ -34,12 +39,13 @@ const AddRow = props => {
     "email",
     "password",
     "passwordConfirm",
-    "role"
   ];
+
+  if (isAdmin) fieldList.push("role");
 
   const validation = {};
   _.toPairs(_.pick(USER_FIELDS, fieldList)).map(
-    a => (validation[a[0]] = _.get(a[1], "validate", null))
+    (a) => (validation[a[0]] = _.get(a[1], "validate", null))
   );
   const validateSchema = Yup.object().shape(validation);
 
@@ -52,29 +58,29 @@ const AddRow = props => {
         showToast({
           message: "Successfully added one user!",
           intent: Intent.SUCCESS,
-          timeout: 3000
+          timeout: 3000,
         });
         toggleDialog(false);
       },
-      fail: err => {
+      fail: (err) => {
         actions.setSubmitting(false);
         showToast({
           message: err.response.data.message,
           intent: Intent.DANGER,
-          timeout: 3000
+          timeout: 3000,
         });
-      }
+      },
     });
   };
 
   const initialValue = {};
   _.toPairs(_.pick(USER_FIELDS, fieldList)).map(
-    a => (initialValue[a[0]] = _.get(a[1], "initialValue", ""))
+    (a) => (initialValue[a[0]] = _.get(a[1], "initialValue", ""))
   );
 
   const passToProps = {
     onChange: handleValueChange,
-    selectedValue: value
+    selectedValue: value,
   };
 
   return (
@@ -97,7 +103,7 @@ const AddRow = props => {
             {({ submitForm, isSubmitting, touched, errors }) => {
               return (
                 <Form>
-                  {fieldList.map(field => {
+                  {fieldList.map((field) => {
                     return (
                       <FormGroup
                         helperText={touched[field] && errors[field]}
@@ -142,14 +148,14 @@ const AddRow = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  params: state.user.params
+const mapStateToProps = (state) => ({
+  params: state.user.params,
 });
 
 const mapDispatchToProps = {
   createUser: createUser,
   getUsers: getUsers,
-  showToast: showToast
+  showToast: showToast,
 };
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(
