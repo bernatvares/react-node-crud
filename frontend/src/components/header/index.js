@@ -12,11 +12,11 @@ import ManageProfile from "components/manage_profile";
 import { showToast } from "store/actions/toast";
 import withToast from "hoc/withToast";
 
-const Header = props => {
+const Header = (props) => {
   const { signout, showToast, media } = props;
   const [isOpen, toggleDialog] = useState(false);
 
-  const role = useSelector(state => get(state, "auth.me.role", 0));
+  const role = useSelector((state) => get(state, "auth.me.role", 0));
   const isManagable = role === ROLES.MANAGER || role === ROLES.ADMIN;
   const history = useHistory();
 
@@ -74,7 +74,7 @@ const Header = props => {
               showToast({
                 message: "You are logged out!",
                 intent: Intent.WARNING,
-                timeout: 3000
+                timeout: 3000,
               });
             }}
           />
@@ -86,11 +86,11 @@ const Header = props => {
 
 const mapDispatchToProps = {
   signout: signout,
-  showToast: showToast
+  showToast: showToast,
 };
 
-const mapStateToProps = state => ({
-  media: state.general.media
+const mapStateToProps = (state) => ({
+  media: state.general.media,
 });
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(

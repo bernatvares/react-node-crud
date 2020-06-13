@@ -108,7 +108,9 @@ const ManageProfile = (props) => {
         onClick={() => {
           toggleDialog(true);
         }}
-      ></Button>
+      >
+        {me.firstName}
+      </Button>
       <Dialog
         icon="edit"
         isOpen={isOpen}
