@@ -49,7 +49,7 @@ const ManageProfile = (props) => {
     deleteProfile({
       success: () => {
         showToast({
-          message: "Your account was removed permanently!",
+          message: "Your account was removed permanently and logged out!",
           intent: Intent.SUCCESS,
         });
         toggleRemoveProfile(false);
