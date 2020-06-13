@@ -53,9 +53,12 @@ const create = async (req, res, next) => {
     if (exist)
       return res.status(409).send({ message: "User already registered." });
 
-    if (req.user.role === ROLES.MANAGER && req.body.role === ROLES.ADMIN) {
+    if (
+      req.user.role === ROLES.MANAGER &&
+      (req.body.role === ROLES.ADMIN || req.body.role === ROLES.MANAGER)
+    ) {
       return res.status(403).send({
-        message: `Permission denied. Managers cannot create admin.`,
+        message: `Permission denied. Managers cannot create admin or manger.`,
       });
     }
 
@@ -82,8 +85,13 @@ const update = async (req, res, next) => {
     if (exist)
       return res.status(409).send({ message: "User already registered." });
 
-    if (req.user.role === ROLES.MANAGER && req.body.role === ROLES.ADMIN) {
-      return res.status(403).send({ message: "Permission denied." });
+    if (
+      req.user.role === ROLES.MANAGER &&
+      (req.body.role === ROLES.ADMIN || req.body.role === ROLES.MANAGER)
+    ) {
+      return res.status(403).send({
+        message: `Permission denied. Managers cannot change the role as admin or manger.`,
+      });
     }
 
     Object.assign(req.userModel, req.body);
