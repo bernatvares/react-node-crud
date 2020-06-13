@@ -76,7 +76,7 @@ const SignUp = (props) => {
         elevation={Elevation.TWO}
         style={{ width: media !== "mobile" ? "30rem" : "95%", margin: "auto" }}
       >
-        <h2 className="text-center">Please Signup Here</h2>
+        <h2 className="text-center">Please Sign up Here</h2>
         <br />
         <Formik
           onSubmit={handleSubmit}
