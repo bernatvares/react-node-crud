@@ -18,8 +18,8 @@ const RecordSchema = new mongoose.Schema({
   difference: {
     type: Number,
     default: 1,
-    min: [-24, "DifferenceToGMT must be more than -24"],
-    max: [24, "DifferenceToGMT should be less than 24"],
+    min: [-12, "Difference must be more than -12"],
+    max: [12, "Difference should be less than 12"],
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,7 +31,7 @@ const Record = mongoose.model("Record", RecordSchema);
 
 const CREATE_RECORD_VALIDATION = (record) => {
   return Joi.validate(record, {
-    difference: Joi.number().required().min(-24).max(24).default(0),
+    difference: Joi.number().required().min(-12).max(12).default(0),
     name: Joi.string().required().min(1).max(50).default(""),
     city: Joi.string().required().min(1).max(250).default(""),
     user: Joi.objectId().required(),
@@ -40,7 +40,7 @@ const CREATE_RECORD_VALIDATION = (record) => {
 
 const UPDATE_RECORD_VALIDATION = (record) => {
   return Joi.validate(record, {
-    difference: Joi.number().optional(),
+    difference: Joi.number().optional().min(-12).max(12),
     name: Joi.string().optional(),
     city: Joi.string().optional(),
     user: Joi.objectId().required(),

@@ -26,13 +26,13 @@ export const RECORD_FIELDS = {
     label: "Time difference to GMT. (Hours)",
     form_label: "Time difference to GMT. (Hours)",
     placeholder: "Hours (required)",
-    id: "timezone-name",
+    id: "timezone-difference",
     type: "text",
     name: "difference",
     component: NumericInput,
     validate: Yup.number()
-      .min(-24, "Difference must be over -24!")
-      .max(24, "Difference must be less than 24!")
+      .min(-12, "Difference must be over -12!")
+      .max(12, "Difference must be less than 12!")
       .required("Required"),
     initialValue: 0,
   },
@@ -40,7 +40,7 @@ export const RECORD_FIELDS = {
     label: "City",
     form_label: "City",
     placeholder: "City (required)",
-    id: "city",
+    id: "timezone-city",
     type: "text",
     name: "city",
     component: InputGroup,

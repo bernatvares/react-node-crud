@@ -48,7 +48,7 @@ const Dashboard = (props) => {
     media,
   } = props;
   const [selectedUsers, setSelectedUsers] = useState([]);
-
+  const [time, setTime] = useState(Date.now());
   const [filterByName, setFilterByName] = useState("");
 
   const style = {
@@ -129,6 +129,37 @@ const Dashboard = (props) => {
     });
   };
 
+  const formatHours = (n) => {
+    return n < 10 ? "0" + n : n;
+  };
+
+  const showGMTDifference = (diff) => {
+    if (diff >= 0) return "GMT + " + formatHours(parseInt(diff));
+    else {
+      diff = -diff;
+      return "GMT - " + formatHours(parseInt(diff));
+    }
+  };
+
+  useEffect(() => {
+    let interval = setInterval(() => setTime(Date.now()), 1000);
+
+    // returned function will be called on component unmount
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const showCurrentTime = (diff) => {
+    var now = new Date();
+    var cur = new Date(
+      now.getTime() +
+        now.getTimezoneOffset() * 60 * 1000 +
+        diff * 60 * 60 * 1000
+    );
+    return moment(cur).format("h:mm:ss A");
+  };
+
   return (
     <div>
       <Header />
@@ -166,8 +197,8 @@ const Dashboard = (props) => {
               defaultRowHeight={38}
               columnWidths={
                 me.role < ROLES.ADMIN
-                  ? [50, 0, 200, 150, 100, 200]
-                  : [50, 200, 200, 150, 100, 200]
+                  ? [50, 0, 200, 150, 200, 200, 200]
+                  : [50, 200, 200, 150, 200, 200, 200]
               }
               renderMode={RenderMode.NONE}
               truncated={false}
@@ -200,7 +231,7 @@ const Dashboard = (props) => {
                 }}
               />
               <Column
-                className={classNames(Classes.LARGE, "pt-1", "pl-2")}
+                className={classNames(Classes.LARGE)}
                 name="Name"
                 cellRenderer={(row) => <Cell>{records[row].name}</Cell>}
               />
@@ -209,13 +240,22 @@ const Dashboard = (props) => {
                 name="City"
                 cellRenderer={(row) => <Cell>{records[row].city}</Cell>}
               />
+
               <Column
                 className={Classes.LARGE}
-                name="Timezone"
+                name="Difference To GMT"
                 cellRenderer={(row) => {
-                  const symbol = records[row].difference >= 0 ? "+" : "";
                   return (
-                    <Cell>{"GMT" + symbol + records[row].difference}</Cell>
+                    <Cell>{showGMTDifference(records[row].difference)}</Cell>
+                  );
+                }}
+              />
+              <Column
+                className={Classes.LARGE}
+                name="CurrentTime"
+                cellRenderer={(row) => {
+                  return (
+                    <Cell>{showCurrentTime(records[row].difference)}</Cell>
                   );
                 }}
               />
