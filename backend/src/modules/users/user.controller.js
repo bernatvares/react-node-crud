@@ -13,7 +13,7 @@ function read(req, res, next) {
 
 const list = async (req, res, next) => {
   try {
-    const { page = 1, limit = 5 } = req.query;
+    const { page, limit } = req.query;
 
     let findRole = 0;
     if (req.user.role == ROLES.ADMIN) {
