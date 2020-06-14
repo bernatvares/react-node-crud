@@ -5,7 +5,13 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --testTimeout=10000"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +21,7 @@
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "http-errors": "^1.7.3",
+    "jest": "^26.0.1",
     "joi": "^14.3.1",
     "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
@@ -22,6 +29,7 @@
     "moment": "^2.25.3",
     "mongoose": "^5.9.14",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }

@@ -108,7 +108,7 @@ const deleteProfile = async (req, res, next) => {
     const user = await User.findOne({ _id: req.user._id });
     await Record.remove({ user: user._id });
     await user.remove();
-    res.json({ id: user._id });
+    res.status(204).json({ id: user._id });
   } catch (error) {
     next(error);
   }

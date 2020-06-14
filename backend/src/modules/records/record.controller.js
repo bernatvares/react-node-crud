@@ -66,7 +66,7 @@ const create = async (req, res, next) => {
     const record = new Record(req.body);
 
     const newRecord = await record.save();
-    res.json(newRecord);
+    res.status(201).json(newRecord);
   } catch (error) {
     next(error);
   }
