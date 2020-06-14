@@ -2,30 +2,33 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 Joi.objectId = require("joi-objectid")(Joi);
 
-const RecordSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 50,
+const RecordSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 50,
+    },
+    city: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 250,
+    },
+    difference: {
+      type: Number,
+      default: 1,
+      min: [-12, "Difference must be more than -12"],
+      max: [12, "Difference should be less than 12"],
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-  city: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 250,
-  },
-  difference: {
-    type: Number,
-    default: 1,
-    min: [-12, "Difference must be more than -12"],
-    max: [12, "Difference should be less than 12"],
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-});
+  { versionKey: false }
+);
 
 const Record = mongoose.model("Record", RecordSchema);
 

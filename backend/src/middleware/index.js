@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const { User } = require("../modules/users/user.model");
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   const header = req.headers["x-access-token"] || req.headers["authorization"];
   if (!header)
     return res
@@ -15,7 +16,15 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token[1], "secret");
-    req.user = decoded;
+    console.log("decoded", decoded);
+    const { _id, role } = decoded;
+
+    const user = await User.find({ _id: _id, role: role });
+    if (!user) {
+      res.status(400).send({ message: "Invalid token." });
+    }
+    req.user = user;
+    console.log(user);
     next();
   } catch (err) {
     res.status(400).send({ message: "Invalid token." });

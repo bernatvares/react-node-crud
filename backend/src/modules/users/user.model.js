@@ -4,47 +4,50 @@ const mongoose = require("mongoose");
 const { ROLES } = require("../../constants");
 const bcrypt = require("bcrypt");
 
-const UserSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 50,
-    trim: true,
+const UserSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 50,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 50,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      minlength: 5,
+      maxlength: 50,
+      unique: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+      maxlength: 250,
+    },
+    passwordConfirm: {
+      type: String,
+      required: true,
+      minlength: 8,
+      maxlength: 250,
+    },
+    role: {
+      type: Number,
+      enum: Object.values(ROLES),
+      default: ROLES.USER,
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 50,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 50,
-    unique: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8,
-    maxlength: 250,
-  },
-  passwordConfirm: {
-    type: String,
-    required: true,
-    minlength: 8,
-    maxlength: 250,
-  },
-  role: {
-    type: Number,
-    enum: Object.values(ROLES),
-    default: ROLES.USER,
-  },
-});
+  { versionKey: false }
+);
 
 UserSchema.methods.getAuthToken = function getAuthToken() {
   const token = jwt.sign({ _id: this._id, role: this.role }, "secret", {
