@@ -103,7 +103,7 @@ const UPDATE_USER_VALIDATION = (user) => {
       .optional()
       .email(),
     role: Joi.number().integer().optional().min(0).max(2).default(ROLES.USER),
-    password: Joi.string().min(8).max(50).optional(),
+    password: Joi.string().min(8).max(50),
     passwordConfirm: Joi.string()
       .optional()
       .valid(Joi.ref("password"))

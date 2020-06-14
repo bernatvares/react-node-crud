@@ -10,7 +10,7 @@ import {
   Intent,
   Classes,
   FormGroup,
-  ProgressBar
+  ProgressBar,
 } from "@blueprintjs/core";
 import moment from "moment";
 import _ from "lodash-es";
@@ -21,17 +21,20 @@ import { DATE_FORMAT, RECORD_FIELDS, ROLES } from "constants/index";
 import { getUsers, setParams } from "store/actions/user";
 import SelectUser from "components/select_user";
 
-const AddRow = props => {
+const AddRow = (props) => {
   const {
     createRecord,
     showToast,
     me,
-    users,
+    otherUsers,
     count,
     userParams,
     getUsers,
-    setParams
+    setParams,
   } = props;
+
+  const users = [me, ...otherUsers];
+
   const [isOpen, toggleDialog] = useState(false);
   const [toDate, selectDate] = useState(new Date());
   const [userIndex, setUserIndex] = useState(0);
@@ -40,7 +43,7 @@ const AddRow = props => {
 
   const validation = {};
   _.toPairs(_.pick(RECORD_FIELDS, fieldList)).map(
-    a => (validation[a[0]] = _.get(a[1], "validate", null))
+    (a) => (validation[a[0]] = _.get(a[1], "validate", null))
   );
   const validateSchema = Yup.object().shape(validation);
 
@@ -54,7 +57,7 @@ const AddRow = props => {
 
   useEffect(() => {}, [isOpen]);
 
-  const handleClick = item => {
+  const handleClick = (item) => {
     const index = map(users, "_id").indexOf(item._id);
     setUserIndex(index);
   };
@@ -70,30 +73,30 @@ const AddRow = props => {
         showToast({
           message: "Successfully added one row to table!",
           intent: Intent.SUCCESS,
-          timeout: 3000
+          timeout: 3000,
         });
         toggleDialog(false);
       },
-      fail: err => {
+      fail: (err) => {
         actions.setSubmitting(false);
         showToast({
           message: err.response.data.message,
-          intent: Intent.DANGER
+          intent: Intent.DANGER,
         });
-      }
+      },
     });
   };
 
   const passProps = {
-    onChange: date => {
+    onChange: (date) => {
       selectDate(date);
     },
-    value: toDate
+    value: toDate,
   };
 
   const initialValue = {};
   _.toPairs(_.pick(RECORD_FIELDS, fieldList)).map(
-    a => (initialValue[a[0]] = _.get(a[1], "initialValue", ""))
+    (a) => (initialValue[a[0]] = _.get(a[1], "initialValue", ""))
   );
 
   return (
@@ -116,7 +119,7 @@ const AddRow = props => {
             {({ submitForm, isSubmitting, touched, errors }) => {
               return (
                 <Form>
-                  {fieldList.map(field => {
+                  {fieldList.map((field) => {
                     return (
                       <FormGroup
                         helperText={touched[field] && errors[field]}
@@ -169,12 +172,12 @@ const AddRow = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   params: state.record.params,
   me: state.auth.me,
-  users: state.user.users,
+  otherUsers: state.user.users,
   userParams: state.user.params,
-  count: state.user.count
+  count: state.user.count,
 });
 
 const mapDispatchToProps = {
@@ -182,7 +185,7 @@ const mapDispatchToProps = {
   getRecords: getRecords,
   showToast: showToast,
   getUsers: getUsers,
-  setParams: setParams
+  setParams: setParams,
 };
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(

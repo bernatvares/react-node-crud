@@ -182,7 +182,7 @@ const Dashboard = (props) => {
           ></input>
           {me.role === ROLES.ADMIN && (
             <MultiSelectUser
-              users={users}
+              users={[me, ...users]}
               selectedUsers={selectedUsers}
               handleClick={handleClick}
               handleClear={handleClear}

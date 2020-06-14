@@ -10,7 +10,7 @@ import {
   Intent,
   Classes,
   FormGroup,
-  ProgressBar
+  ProgressBar,
 } from "@blueprintjs/core";
 import { map } from "lodash-es";
 import { updateRecord, getRecords } from "store/actions/record";
@@ -18,24 +18,22 @@ import { showToast } from "store/actions/toast";
 import { RECORD_FIELDS } from "constants/index";
 import SelectUser from "components/select_user";
 
-const EditRow = props => {
+const EditRow = (props) => {
   const {
     updateRecord,
     showToast,
     selectedRow,
     me,
-    users,
+    otherUsers,
     params,
-    getRecords
+    getRecords,
   } = props;
+  const users = [me, ...otherUsers];
+
   const [isOpen, toggleDialog] = useState(false);
   const [toDate, selectDate] = useState(new Date(selectedRow.date));
 
   const [userIndex, setUserIndex] = useState(0);
-
-  useEffect(() => {
-    setUserIndex(map(users, "_id").indexOf(selectedRow.user["_id"]));
-  }, [selectedRow, users]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,11 +43,11 @@ const EditRow = props => {
 
   const validation = {};
   _.toPairs(_.pick(RECORD_FIELDS, fieldList)).map(
-    a => (validation[a[0]] = _.get(a[1], "validate", null))
+    (a) => (validation[a[0]] = _.get(a[1], "validate", null))
   );
   const validateSchema = Yup.object().shape(validation);
 
-  const handleClick = item => {
+  const handleClick = (item) => {
     const index = map(users, "_id").indexOf(item._id);
     setUserIndex(index);
   };
@@ -64,29 +62,29 @@ const EditRow = props => {
       success: () => {
         actions.setSubmitting(false);
         getRecords({
-          params
+          params,
         });
 
         showToast({
           message: "Successfully updated the row to table!",
           intent: Intent.SUCCESS,
-          timeout: 3000
+          timeout: 3000,
         });
         toggleDialog(false);
       },
-      fail: err => {
+      fail: (err) => {
         actions.setSubmitting(false);
         showToast({
           message: err.response.data.message,
-          intent: Intent.DANGER
+          intent: Intent.DANGER,
         });
-      }
+      },
     });
   };
 
   const initialValue = {};
   _.toPairs(_.pick(RECORD_FIELDS, fieldList)).map(
-    a => (initialValue[a[0]] = _.get(selectedRow, a[0], ""))
+    (a) => (initialValue[a[0]] = _.get(selectedRow, a[0], ""))
   );
 
   return (
@@ -114,7 +112,7 @@ const EditRow = props => {
             {({ submitForm, isSubmitting, touched, errors }) => {
               return (
                 <Form>
-                  {fieldList.map(field => {
+                  {fieldList.map((field) => {
                     return (
                       <FormGroup
                         helperText={touched[field] && errors[field]}
@@ -166,18 +164,18 @@ const EditRow = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   params: state.record.params,
   me: state.auth.me,
-  users: state.user.users,
+  otherUsers: state.user.users,
   userParams: state.user.params,
-  count: state.user.count
+  count: state.user.count,
 });
 
 const mapDispatchToProps = {
   updateRecord: updateRecord,
   getRecords: getRecords,
-  showToast: showToast
+  showToast: showToast,
 };
 
 export default compose(connect(mapStateToProps, mapDispatchToProps))(EditRow);
