@@ -33,3 +33,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.bp3-table-cell {
+  padding-top: 5px;
+}
