@@ -252,7 +252,7 @@ const Dashboard = (props) => {
               />
               <Column
                 className={Classes.LARGE}
-                name="CurrentTime"
+                name="Current Time"
                 cellRenderer={(row) => {
                   return (
                     <Cell>{showCurrentTime(records[row].difference)}</Cell>
