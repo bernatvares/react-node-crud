@@ -16,15 +16,13 @@ module.exports = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token[1], "secret");
-    console.log("decoded", decoded);
     const { _id, role } = decoded;
 
-    const user = await User.find({ _id: _id, role: role });
-    if (!user) {
+    const user = await User.findById(_id);
+    if (!user || user.role != role) {
       res.status(400).send({ message: "Invalid token." });
     }
-    req.user = user;
-    console.log(user);
+    req.user = decoded;
     next();
   } catch (err) {
     res.status(400).send({ message: "Invalid token." });
