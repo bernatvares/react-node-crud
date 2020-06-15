@@ -187,7 +187,7 @@ const ManageProfile = (props) => {
         icon="trash"
         isOpen={isRemoveProfileOpen}
         onClose={() => toggleRemoveProfile(false)}
-        title="Delete the account"
+        title="Remove your account"
       >
         <div className={Classes.DIALOG_BODY}>
           Would you like to delete your account permanently?
